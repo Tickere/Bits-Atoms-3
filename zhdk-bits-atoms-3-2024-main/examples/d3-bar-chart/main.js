@@ -77,7 +77,9 @@ function drawChart(data) {
     .attr("y", (d) => y(d.emission))
     .attr("height", (d) => height - y(d.emission) - marginBottom)
     .attr("data-year", (d) => d.jahr)
+
     .attr("width", x.bandwidth());
+  // .attr("width", 1200 / data.length - 10);
 
   // Add y-axis label
   svg
@@ -97,3 +99,5 @@ function drawChart(data) {
 }
 
 fetchData();
+
+// use case for translate?
