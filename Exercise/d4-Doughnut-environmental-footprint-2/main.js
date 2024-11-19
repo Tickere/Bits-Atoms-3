@@ -1,6 +1,6 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-console.log("Displaying multiple doughnut charts");
+console.log("Displaying selectable doughnut charts with hover effect");
 
 const width = 300; // Width of each chart
 const height = 300; // Height of each chart
@@ -13,16 +13,45 @@ async function fetchData() {
   if (response.ok) {
     let json = await response.json();
     console.log("Received response:", json);
+    createRadioButtons(json);
     drawCharts(json);
   } else {
     alert("HTTP-Error: " + response.status);
   }
 }
 
+function createRadioButtons(data) {
+  const container = d3.select("#container");
+
+  // Create a container for radio buttons
+  const radioContainer = d3
+    .select("body")
+    .insert("div", "#container")
+    .attr("id", "radio-container")
+    .style("margin-bottom", "20px");
+
+  // Add radio buttons for each group
+  data.forEach((groupData, index) => {
+    const radioLabel = radioContainer
+      .append("label")
+      .style("margin-right", "15px");
+
+    radioLabel
+      .append("input")
+      .attr("type", "radio")
+      .attr("name", "category")
+      .attr("value", index)
+      .property("checked", index === 0) // Check the first option by default
+      .on("change", () => showChart(index));
+
+    radioLabel.append("span").text(groupData.group);
+  });
+}
+
 function drawCharts(data) {
   const container = d3.select("#container");
 
-  data.forEach((groupData) => {
+  data.forEach((groupData, index) => {
     const metrics = [
       { name: "Almond milk", value: groupData["value 1"] },
       { name: "Dairy milk", value: groupData["value 2"] },
@@ -35,8 +64,9 @@ function drawCharts(data) {
     const chartContainer = container
       .append("div")
       .attr("class", "chart")
-      .style("display", "inline-block")
-      .style("margin", "20px");
+      .style("display", index === 0 ? "inline-block" : "none") // Show only the first chart initially
+      .style("margin", "20px")
+      .attr("data-index", index);
 
     // Add group name and declaration as title
     chartContainer
@@ -82,16 +112,35 @@ function drawCharts(data) {
       .attr("stroke", "white")
       .style("stroke-width", "2px");
 
-    // Add labels
+    // Create a label at the bottom for displaying the hovered value
+    const valueLabel = chartContainer
+      .append("div")
+      .attr("class", "value-label")
+      .style("text-align", "center")
+      .style("font-size", "14px")
+      .style("margin-top", "10px");
+
+    // Set default label text
+    valueLabel.text("Hover over a segment to see the value");
+
+    // Add hover functionality to display value at the bottom
     svg
-      .selectAll("text")
-      .data(pieData)
-      .join("text")
-      .text((d) => `${d.data.name}: ${d.data.value}`)
-      .attr("transform", (d) => `translate(${arc.centroid(d)})`)
-      .style("text-anchor", "middle")
-      .style("font-size", "10px");
+      .selectAll("path")
+      .on("mouseover", (event, d) => {
+        // Update the label with the value of the hovered segment
+        valueLabel.text(`${d.data.name}: ${d.data.value}`);
+      })
+      .on("mouseout", () => {
+        // Reset the label text when mouse leaves the segment
+        valueLabel.text("Hover over a segment to see the value");
+      });
   });
+}
+
+function showChart(index) {
+  // Hide all charts and show only the selected one
+  d3.selectAll(".chart").style("display", "none");
+  d3.select(`.chart[data-index="${index}"]`).style("display", "inline-block");
 }
 
 // Fetch data and draw the charts
