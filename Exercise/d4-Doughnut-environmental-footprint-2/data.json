@@ -1,77 +1,82 @@
 [
   {
-    "product": "Almond milk",
-    "untergruppe 1": "land use",
+    "group": "land use",
+    "declaration": "m² per kg",
+
+    "product 1": "Almond milk",
     "value 1": 0.50,
-    "declarations 1": "m² per kg",
-    "untergruppe 2": "greenhouse gas emissions",
-    "value 2": 0.70,
-    "declarations 2": "kbCO2eq per litre",
-    "untergruppe 3": "Freshwater use",
-    "value 3": 371.46,
-    "declarations 3": "litres per litre",
-    "untergruppe 4": "Eutrophication",
-    "value 4": 1.5,
-    "declarations 4": "gPO4eq per litre"
-  },
-  {
+
     "product": "Dairy milk",
-    "untergruppe 1": "land use",
-    "value 1": 8.95,
-    "declarations 1": "m² per kg",
-    "untergruppe 2": "greenhouse gas emissions",
-    "value 2": 3.15,
-    "declarations 2": "kbCO2eq per litre",
-    "untergruppe 3": "Freshwater use",
-    "value 3": 628.20,
-    "declarations 3": "litres per litre",
-    "untergruppe 4": "Eutrophication",
-    "value 4": 10.65,
-    "declarations 4": "gPO4eq per litre"
-  },
-  {
+    "value 2": 8.95,
+
     "product": "Oat milk",
-    "untergruppe 1": "land use",
-    "value 1": 0.76,
-    "declarations 1": "m² per kg",
-    "untergruppe 2": "greenhouse gas emissions",
-    "value 2": 0.90,
-    "declarations 2": "kbCO2eq per litre",
-    "untergruppe 3": "Freshwater use",
-    "value 3": 48.24,
-    "declarations 3": "litres per litre",
-    "untergruppe 4": "Eutrophication",
-    "value 4": 1.62,
-    "declarations 4": "gPO4eq per litre"
-  },
-  {
+    "value 3": 0.76,
+
     "product": "Rice milk",
-    "untergruppe 1": "land use",
-    "value 1": 0.34,
-    "declarations 1": "m² per kg",
-    "untergruppe 2": "greenhouse gas emissions",
-    "value 2": 1.18,
-    "declarations 2": "kbCO2eq per litre",
-    "untergruppe 3": "Freshwater use",
-    "value 3": 269.81,
-    "declarations 3": "litres per litre",
-    "untergruppe 4": "Eutrophication",
-    "value 4": 4.69,
-    "declarations 4": "gPO4eq per litre"
+    "value 4": 0.34,
+
+    "product": "Soy milk",
+    "value 1": 0.66
   },
   {
+
+    "group": "greenhouse gas emissions",
+    "declaration": "kg CO2 per litre",
+
+
+    "product 1": "Almond milk",
+    "value 1": 0.70,
+
+    "product": "Dairy milk",
+    "value 2": 3.15,
+
+    "product": "Oat milk",
+    "value 3": 0.90,
+
+    "product": "Rice milk",
+    "value 4": 1.18,
+
     "product": "Soy milk",
-    "untergruppe 1": "land use",
-    "value 1": 0.66,
-    "declarations 1": "m² per kg",
-    "untergruppe 2": "greenhouse gas emissions",
-    "value 2": 0.98,
-    "declarations 2": "kbCO2eq per litre",
-    "untergruppe 3": "Freshwater use",
-    "value 3": 27.80,
-    "declarations 3": "litres per litre",
-    "untergruppe 4": "Eutrophication",
-    "value 4": 1.06,
-    "declarations 4": "gPO4eq per litre"
+    "value 5": 0.98
+  },
+  {
+    "group": "Freshwater use",
+    "declaration": "litres per litre",
+
+
+    "product 1": "Almond milk",
+    "value 1": 371.46,
+
+    "product": "Dairy milk",
+    "value 2": 628.20,
+
+    "product": "Oat milk",
+    "value 3": 48.24,
+
+    "product": "Rice milk",
+    "value 4": 269.81,
+
+    "product": "Soy milk",
+    "value 5": 1.06
+  },
+  {
+    "group": "Eutrophication",
+    "declaration": "gramm per litre",
+
+
+    "product 1": "Almond milk",
+    "value 1": 1.5,
+
+    "product": "Dairy milk",
+    "value 2": 10.65,
+
+    "product": "Oat milk",
+    "value 3": 1.62,
+
+    "product": "Rice milk",
+    "value 4": 4.69,
+
+    "product": "Soy milk",
+    "value 5": 1.06
   }
 ]

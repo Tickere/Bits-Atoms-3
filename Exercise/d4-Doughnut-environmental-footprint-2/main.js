@@ -22,13 +22,13 @@ async function fetchData() {
 function drawCharts(data) {
   const container = d3.select("#container");
 
-  data.forEach((productData) => {
-    // Extract relevant metrics for the product
-    const productMetrics = [
-      { name: productData["untergruppe 1"], value: productData["value 1"] },
-      { name: productData["untergruppe 2"], value: productData["value 2"] },
-      { name: productData["untergruppe 3"], value: productData["value 3"] },
-      { name: productData["untergruppe 4"], value: productData["value 4"] },
+  data.forEach((groupData) => {
+    const metrics = [
+      { name: "Almond milk", value: groupData["value 1"] },
+      { name: "Dairy milk", value: groupData["value 2"] },
+      { name: "Oat milk", value: groupData["value 3"] },
+      { name: "Rice milk", value: groupData["value 4"] },
+      { name: "Soy milk", value: groupData["value 5"] },
     ];
 
     // Create a separate div for each chart
@@ -38,11 +38,18 @@ function drawCharts(data) {
       .style("display", "inline-block")
       .style("margin", "20px");
 
-    // Add product name
+    // Add group name and declaration as title
     chartContainer
       .append("h3")
-      .text(productData.product)
+      .text(groupData.group)
       .style("text-align", "center");
+
+    chartContainer
+      .append("p")
+      .text(groupData.declaration)
+      .style("text-align", "center")
+      .style("font-size", "12px")
+      .style("color", "gray");
 
     // Create SVG for the doughnut chart
     const svg = chartContainer
@@ -53,7 +60,7 @@ function drawCharts(data) {
       .attr("transform", `translate(${width / 2}, ${height / 2})`);
 
     // Prepare data for the doughnut chart
-    const pieData = d3.pie().value((d) => d.value)(productMetrics);
+    const pieData = d3.pie().value((d) => d.value)(metrics);
 
     // Color scale
     const color = d3.scaleOrdinal(d3.schemeCategory10);
