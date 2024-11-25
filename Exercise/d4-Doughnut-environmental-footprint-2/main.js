@@ -1,6 +1,8 @@
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
-console.log("Displaying selectable doughnut charts with hover effect");
+console.log(
+  "Displaying selectable doughnut charts with hover effect and dynamic transitions"
+);
 
 const width = 300; // Width of each chart
 const height = 300; // Height of each chart
@@ -102,15 +104,19 @@ function drawCharts(data) {
       .innerRadius(radius * 0.5) // Inner radius for the doughnut hole
       .outerRadius(radius);
 
-    // Draw the arcs
-    svg
+    // Draw the arcs with transitions
+    const arcs = svg
       .selectAll("path")
       .data(pieData)
       .join("path")
       .attr("d", arc)
       .attr("fill", (d, i) => color(i))
       .attr("stroke", "white")
-      .style("stroke-width", "2px");
+      .style("stroke-width", "2px")
+      .style("opacity", 0) // Initially hide the arcs
+      .transition() // Transition for opacity and arcs drawing
+      .duration(1000)
+      .style("opacity", 1);
 
     // Create a label at the bottom for displaying the hovered value
     const valueLabel = chartContainer
@@ -138,9 +144,21 @@ function drawCharts(data) {
 }
 
 function showChart(index) {
-  // Hide all charts and show only the selected one
-  d3.selectAll(".chart").style("display", "none");
-  d3.select(`.chart[data-index="${index}"]`).style("display", "inline-block");
+  // Hide all charts and apply a transition to show the selected chart
+  d3.selectAll(".chart")
+    .transition()
+    .duration(500)
+    .style("opacity", 0)
+    .on("end", () => {
+      // Hide all charts after opacity transition
+      d3.selectAll(".chart").style("display", "none");
+      // Show the selected chart with opacity transition
+      d3.select(`.chart[data-index="${index}"]`)
+        .style("display", "inline-block")
+        .transition()
+        .duration(500)
+        .style("opacity", 1);
+    });
 }
 
 // Fetch data and draw the charts

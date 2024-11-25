@@ -6,16 +6,16 @@
     "product 1": "Almond milk",
     "value 1": 0.50,
 
-    "product": "Dairy milk",
+    "product 2": "Dairy milk",
     "value 2": 8.95,
 
-    "product": "Oat milk",
+    "product 3": "Oat milk",
     "value 3": 0.76,
 
-    "product": "Rice milk",
+    "product 4": "Rice milk",
     "value 4": 0.34,
 
-    "product": "Soy milk",
+    "product 5": "Soy milk",
     "value 5": 0.66
   },
   {
@@ -27,16 +27,16 @@
     "product 1": "Almond milk",
     "value 1": 0.70,
 
-    "product": "Dairy milk",
+    "product 2": "Dairy milk",
     "value 2": 3.15,
 
-    "product": "Oat milk",
+    "product 3": "Oat milk",
     "value 3": 0.90,
 
-    "product": "Rice milk",
+    "product 4": "Rice milk",
     "value 4": 1.18,
 
-    "product": "Soy milk",
+    "product 5": "Soy milk",
     "value 5": 0.98
   },
   {
@@ -47,16 +47,16 @@
     "product 1": "Almond milk",
     "value 1": 371.46,
 
-    "product": "Dairy milk",
+    "product 2": "Dairy milk",
     "value 2": 628.20,
 
-    "product": "Oat milk",
+    "product 3": "Oat milk",
     "value 3": 48.24,
 
-    "product": "Rice milk",
+    "product 4": "Rice milk",
     "value 4": 269.81,
 
-    "product": "Soy milk",
+    "product 5": "Soy milk",
     "value 5": 1.06
   },
   {
@@ -67,16 +67,16 @@
     "product 1": "Almond milk",
     "value 1": 1.5,
 
-    "product": "Dairy milk",
+    "product 2": "Dairy milk",
     "value 2": 10.65,
 
-    "product": "Oat milk",
+    "product 3": "Oat milk",
     "value 3": 1.62,
 
-    "product": "Rice milk",
+    "product 4": "Rice milk",
     "value 4": 4.69,
 
-    "product": "Soy milk",
+    "product 5": "Soy milk",
     "value 5": 1.06
   }
 ]
