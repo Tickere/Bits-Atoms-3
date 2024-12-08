@@ -1,21 +1,24 @@
-// Up to 8 columns, each can have a different number of squares
-const squaresPerGridFull = [30, 405, 10, 60, 25, 40, 15, 5];
+// Define the square data for up to 8 grids
+const squaresPerGridFull = [30, 1000, 10, 60, 25, 40, 15, 5];
 
-let numColumns = 4; // Default number of columns, can be changed from 1 to 8
+let activeCountries = []; // Keeps track of active grids
 
 const spacing = 2;
-const padding = 0; // Matches .grid-container padding in CSS
+const padding = 5; // Matches .grid-container padding in CSS
 
+// Initialize Tooltip using D3.js
+const tooltip = d3.select("#tooltip");
+
+// Build the layout based on active countries
 function buildLayout() {
   const outerContainer = document.getElementById("outer-container");
   outerContainer.innerHTML = ""; // Clear existing grids
 
-  // Create the specified number of columns
-  for (let i = 0; i < numColumns; i++) {
+  activeCountries.forEach((countryIndex) => {
     const grid = document.createElement("div");
     grid.classList.add("grid-container");
     outerContainer.appendChild(grid);
-  }
+  });
 
   layoutAllGrids();
 }
@@ -46,19 +49,23 @@ function findMaxSquareSizeForSingleGrid(container, numSquares) {
 function findGlobalSquareSize() {
   const containers = document.querySelectorAll(".grid-container");
   const sizes = [];
-  const squaresPerGrid = squaresPerGridFull.slice(0, numColumns); // Use only as many as needed
-
-  containers.forEach((container, index) => {
+  activeCountries.forEach((countryIndex, index) => {
+    const container = containers[index];
     const maxSize = findMaxSquareSizeForSingleGrid(
       container,
-      squaresPerGrid[index]
+      squaresPerGridFull[countryIndex]
     );
     sizes.push(maxSize);
   });
   return Math.min(...sizes);
 }
 
-function layoutSquaresForContainer(container, numSquares, globalSquareSize) {
+function layoutSquaresForContainer(
+  container,
+  numSquares,
+  globalSquareSize,
+  countryIndex
+) {
   container.innerHTML = "";
 
   const totalWidth = container.clientWidth;
@@ -101,32 +108,69 @@ function layoutSquaresForContainer(container, numSquares, globalSquareSize) {
     square.style.left = leftPos + "px";
     square.style.top = topPos + "px";
 
+    // Add tooltip event listeners using D3.js
+    d3.select(square)
+      .on("mouseover", function (event) {
+        tooltip
+          .style("opacity", 1)
+          .html(`Country ${countryIndex + 1} - Square ${i + 1}`)
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mousemove", function (event) {
+        tooltip
+          .style("left", event.pageX + 10 + "px")
+          .style("top", event.pageY - 28 + "px");
+      })
+      .on("mouseout", function () {
+        tooltip.style("opacity", 0);
+      });
+
     container.appendChild(square);
   }
 }
 
 function layoutAllGrids() {
+  if (activeCountries.length === 0) return; // No active grids to layout
+
   const globalSquareSize = findGlobalSquareSize();
   const containers = document.querySelectorAll(".grid-container");
-  const squaresPerGrid = squaresPerGridFull.slice(0, numColumns);
-
-  containers.forEach((container, index) => {
+  activeCountries.forEach((countryIndex, index) => {
+    const container = containers[index];
     layoutSquaresForContainer(
       container,
-      squaresPerGrid[index],
-      globalSquareSize
+      squaresPerGridFull[countryIndex],
+      globalSquareSize,
+      countryIndex
     );
   });
 }
 
-function changeColumns(newCount) {
-  if (newCount >= 1 && newCount <= 8) {
-    numColumns = newCount;
-    buildLayout();
+// Toggle button state
+function toggleCountry(countryIndex) {
+  const button = document.querySelector(
+    `.toggle-button[data-country="${countryIndex + 1}"]`
+  );
+
+  if (activeCountries.includes(countryIndex)) {
+    // Remove the country if already active
+    activeCountries = activeCountries.filter((index) => index !== countryIndex);
+    button.classList.remove("toggled");
+  } else {
+    // Add the country if not active
+    activeCountries.push(countryIndex);
+    button.classList.add("toggled");
   }
+
+  buildLayout();
 }
 
-// Initial layout
+// Attach event listeners to all buttons
+document.querySelectorAll(".toggle-button").forEach((button, index) => {
+  button.addEventListener("click", () => toggleCountry(index));
+});
+
+// Initial empty layout
 buildLayout();
 
 // Re-layout on window resize

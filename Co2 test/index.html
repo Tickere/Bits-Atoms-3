@@ -3,20 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dynamic Columns (Up to 8)</title>
+    <title>Country Toggles with D3.js</title>
     <link rel="stylesheet" href="styles.css" />
+    <!-- Include D3.js via CDN -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body>
+    <div id="buttons-container">
+      <button class="toggle-button" data-country="1">Country 1</button>
+      <button class="toggle-button" data-country="2">Country 2</button>
+      <button class="toggle-button" data-country="3">Country 3</button>
+      <button class="toggle-button" data-country="4">Country 4</button>
+      <button class="toggle-button" data-country="5">Country 5</button>
+      <button class="toggle-button" data-country="6">Country 6</button>
+      <button class="toggle-button" data-country="7">Country 7</button>
+      <button class="toggle-button" data-country="8">Country 8</button>
+    </div>
+
     <div id="outer-container"></div>
-    <!-- Example Buttons to test changing columns -->
-    <button onclick="changeColumns(1)">1 Column</button>
-    <button onclick="changeColumns(2)">2 Columns</button>
-    <button onclick="changeColumns(3)">3 Columns</button>
-    <button onclick="changeColumns(4)">4 Columns</button>
-    <button onclick="changeColumns(5)">5 Columns</button>
-    <button onclick="changeColumns(6)">6 Columns</button>
-    <button onclick="changeColumns(7)">7 Columns</button>
-    <button onclick="changeColumns(8)">8 Columns</button>
+
+    <!-- Tooltip Element -->
+    <div id="tooltip" class="tooltip"></div>
 
     <script src="script.js"></script>
   </body>
