@@ -1,0 +1,37 @@
+[
+  {
+    "country": "Tokyo",
+
+    "Flight duration": "13h 18m",
+    "Distance": "9605 km",
+    "gCO₂ per passenger": "1454kg",
+
+    "Google search": 7267355,
+    "Tweet": 7267355,
+    "Spam": 4844903,
+    "E-Mail": 363368,
+    "AI prompt": 338016,
+    "E-Mail attachment": 29069,
+    "Streaming": 14535,
+    "Video conference": 9690
+  },
+  {
+    "group": "Eutrophication",
+    "declaration": "gramm per litre",
+
+    "product 1": "Almond milk",
+    "value 1": 1.5,
+
+    "product 2": "Dairy milk",
+    "value 2": 10.65,
+
+    "product 3": "Oat milk",
+    "value 3": 1.62,
+
+    "product 4": "Rice milk",
+    "value 4": 4.69,
+
+    "product 5": "Soy milk",
+    "value 5": 1.06
+  }
+]
