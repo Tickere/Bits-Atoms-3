@@ -14,11 +14,20 @@ function buildLayout() {
   const outerContainer = document.getElementById("outer-container");
   outerContainer.innerHTML = ""; // Clear existing grids
 
-  activeCountries.forEach((countryIndex) => {
+  // Always create 8 grid containers, one for each possible country
+  for (let i = 0; i < 8; i++) {
     const grid = document.createElement("div");
     grid.classList.add("grid-container");
+    grid.dataset.country = i; // Assign a data attribute to identify the country
+
+    if (activeCountries.includes(i)) {
+      grid.classList.add("active"); // Mark as active if it's toggled
+    } else {
+      grid.classList.add("inactive"); // Mark as inactive otherwise
+    }
+
     outerContainer.appendChild(grid);
-  });
+  }
 
   layoutAllGrids();
 }
@@ -57,7 +66,7 @@ function findGlobalSquareSize() {
     );
     sizes.push(maxSize);
   });
-  return Math.min(...sizes);
+  return Math.max(14, Math.min(...sizes)); // Enforce minimum size of 14
 }
 
 function layoutSquaresForContainer(
@@ -69,27 +78,29 @@ function layoutSquaresForContainer(
   container.innerHTML = "";
 
   const totalWidth = container.clientWidth;
-  const totalHeight = container.clientHeight;
   const innerWidth = totalWidth - 2 * padding;
-  const innerHeight = totalHeight - 2 * padding;
 
   let chosenColumns = 1;
-  // Try to fit as many columns as possible at the given globalSquareSize
   for (let cols = numSquares; cols >= 1; cols--) {
     const rows = Math.ceil(numSquares / cols);
     const totalHorizontalSpacing = (cols - 1) * spacing;
     const totalVerticalSpacing = (rows - 1) * spacing;
 
     const requiredWidth = cols * globalSquareSize + totalHorizontalSpacing;
-    const requiredHeight = rows * globalSquareSize + totalVerticalSpacing;
-
-    if (requiredWidth <= innerWidth && requiredHeight <= innerHeight) {
+    if (requiredWidth <= innerWidth) {
       chosenColumns = cols;
       break;
     }
   }
 
   const chosenRows = Math.ceil(numSquares / chosenColumns);
+  const requiredHeight =
+    padding * 2 + chosenRows * globalSquareSize + (chosenRows - 1) * spacing;
+
+  if (requiredHeight > container.clientHeight) {
+    container.style.height = requiredHeight + "px";
+    container.scrollTop = container.scrollHeight; // Scroll to the bottom
+  }
 
   for (let i = 0; i < numSquares; i++) {
     const square = document.createElement("div");
@@ -100,15 +111,12 @@ function layoutSquaresForContainer(
     const col = i % chosenColumns;
     const row = Math.floor(i / chosenColumns);
 
-    const leftPos =
-      padding + (chosenColumns - 1 - col) * (globalSquareSize + spacing);
-    const topPos =
-      totalHeight - padding - (row + 1) * globalSquareSize - row * spacing;
+    const leftPos = padding + col * (globalSquareSize + spacing); // Columns are left-aligned
+    const topPos = padding + row * (globalSquareSize + spacing); // Rows are top-aligned
 
     square.style.left = leftPos + "px";
     square.style.top = topPos + "px";
 
-    // Add tooltip event listeners using D3.js
     d3.select(square)
       .on("mouseover", function (event) {
         tooltip
@@ -131,33 +139,36 @@ function layoutSquaresForContainer(
 }
 
 function layoutAllGrids() {
-  if (activeCountries.length === 0) return; // No active grids to layout
-
-  const globalSquareSize = findGlobalSquareSize();
   const containers = document.querySelectorAll(".grid-container");
-  activeCountries.forEach((countryIndex, index) => {
-    const container = containers[index];
-    layoutSquaresForContainer(
-      container,
-      squaresPerGridFull[countryIndex],
-      globalSquareSize,
-      countryIndex
-    );
+
+  containers.forEach((container) => {
+    const countryIndex = parseInt(container.dataset.country, 10);
+
+    if (activeCountries.includes(countryIndex)) {
+      const numSquares = squaresPerGridFull[countryIndex];
+      const globalSquareSize = findGlobalSquareSize();
+      layoutSquaresForContainer(
+        container,
+        numSquares,
+        globalSquareSize,
+        countryIndex
+      );
+      container.style.display = "block"; // Ensure active grids are visible
+    } else {
+      container.style.display = "none"; // Hide inactive grids
+    }
   });
 }
 
-// Toggle button state
 function toggleCountry(countryIndex) {
   const button = document.querySelector(
     `.toggle-button[data-country="${countryIndex + 1}"]`
   );
 
   if (activeCountries.includes(countryIndex)) {
-    // Remove the country if already active
     activeCountries = activeCountries.filter((index) => index !== countryIndex);
     button.classList.remove("toggled");
   } else {
-    // Add the country if not active
     activeCountries.push(countryIndex);
     button.classList.add("toggled");
   }
@@ -165,13 +176,9 @@ function toggleCountry(countryIndex) {
   buildLayout();
 }
 
-// Attach event listeners to all buttons
 document.querySelectorAll(".toggle-button").forEach((button, index) => {
   button.addEventListener("click", () => toggleCountry(index));
 });
 
-// Initial empty layout
 buildLayout();
-
-// Re-layout on window resize
 window.addEventListener("resize", layoutAllGrids);

@@ -32,25 +32,31 @@ body {
 
 #outer-container {
   display: flex;
-  flex-direction: row;
+  flex-wrap: wrap;
   width: 80vw;
   height: 80vh;
   margin: 20px;
   background: #fff;
   border: 2px solid #333;
   box-sizing: border-box;
-  overflow: hidden;
+  overflow-y: auto; /* Enable vertical scrolling */
   gap: 18px; /* space between columns */
 }
 
 .grid-container {
   position: relative;
   flex: 1;
+  min-height: 200px; /* Ensure some height for inactive containers */
   padding: 20px;
   border: 1px solid #333;
   box-sizing: border-box;
   overflow: hidden;
   background: #fff;
+  display: none; /* Hidden by default */
+}
+
+.grid-container.active {
+  display: block; /* Show active grids */
 }
 
 .square {
@@ -59,7 +65,6 @@ body {
   position: absolute;
 }
 
-/* Tooltip styles */
 .tooltip {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.7);
