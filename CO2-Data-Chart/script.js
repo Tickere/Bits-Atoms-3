@@ -1,5 +1,5 @@
 // Define the square data for up to 8 grids
-const squaresPerGridFull = [30, 1000, 10, 60, 25, 40, 15, 5];
+const squaresPerGridFull = [1, 600, 10, 60, 25, 40, 15, 5];
 
 let activeCountries = []; // Keeps track of active grids
 
