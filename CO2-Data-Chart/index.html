@@ -3,47 +3,74 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Medium and Country Toggles with D3.js</title>
+    <title>Digital Carbon Footprint</title>
     <link rel="stylesheet" href="styles.css" />
     <!-- Include D3.js via CDN -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body>
-    <div id="country-buttons-container">
-      <button class="country-toggle-button" data-country="Tokyo">Tokyo</button>
-      <button class="country-toggle-button" data-country="New York">
-        New York
-      </button>
-      <button class="country-toggle-button" data-country="Berlin">
-        Berlin
-      </button>
-      <button class="country-toggle-button" data-country="Istanbul">
-        Istanbul
-      </button>
-      <button class="country-toggle-button" data-country="Barcelona">
-        Barcelona
-      </button>
-      <button class="country-toggle-button" data-country="Dubai">Dubai</button>
-      <button class="country-toggle-button" data-country="Singapore">
-        Singapore
-      </button>
-      <button class="country-toggle-button" data-country="Beijing">
-        Beijing
-      </button>
-    </div>
+    <div id="main-content-container">
+      <div id="container-header">5 Hidden Emissions</div>
+      <div id="subtext-container">
+        <div id="left-column">
+          A single flight emits far more CO₂ than a Google search or an hour of
+          streaming. However, the sheer frequency of our digital consumption
+          adds up, making its total emissions surpass those of aviation.
+        </div>
+        <div id="right-column"></div>
+      </div>
+      <div id="section-title">
+        How do emissions from a flight stack up against everyday digital
+        activities?
+      </div>
 
-    <div id="buttons-container">
-      <button class="toggle-button" data-medium="1">Medium 1</button>
-      <button class="toggle-button" data-medium="2">Medium 2</button>
-      <button class="toggle-button" data-medium="3">Medium 3</button>
-      <button class="toggle-button" data-medium="4">Medium 4</button>
-      <button class="toggle-button" data-medium="5">Medium 5</button>
-      <button class="toggle-button" data-medium="6">Medium 6</button>
-      <button class="toggle-button" data-medium="7">Medium 7</button>
-      <button class="toggle-button" data-medium="8">Medium 8</button>
-    </div>
+      <!-- New button container -->
+      <div id="selectors-container">
+        <div id="country-buttons-container">
+          <button class="country-toggle-button" data-country="Tokyo">
+            Tokyo
+          </button>
+          <button class="country-toggle-button" data-country="New York">
+            New York
+          </button>
+          <button class="country-toggle-button" data-country="Berlin">
+            Berlin
+          </button>
+          <button class="country-toggle-button" data-country="Istanbul">
+            Istanbul
+          </button>
+          <button class="country-toggle-button" data-country="Barcelona">
+            Barcelona
+          </button>
+          <button class="country-toggle-button" data-country="Dubai">
+            Dubai
+          </button>
+          <button class="country-toggle-button" data-country="Singapore">
+            Singapore
+          </button>
+          <button class="country-toggle-button" data-country="Beijing">
+            Beijing
+          </button>
+        </div>
 
-    <div id="outer-container"></div>
+        <div id="buttons-container">
+          <button class="toggle-button" data-medium="1">
+            Video conference
+          </button>
+          <button class="toggle-button" data-medium="2">Streaming</button>
+          <button class="toggle-button" data-medium="3">
+            E-Mail attachment
+          </button>
+          <button class="toggle-button" data-medium="4">AI prompt</button>
+          <button class="toggle-button" data-medium="5">E-Mail</button>
+          <button class="toggle-button" data-medium="6">Spam</button>
+          <button class="toggle-button" data-medium="7">Tweet</button>
+          <button class="toggle-button" data-medium="8">Google search</button>
+        </div>
+      </div>
+
+      <div id="outer-container"></div>
+    </div>
 
     <!-- Tooltip Element -->
     <div id="tooltip" class="tooltip"></div>
