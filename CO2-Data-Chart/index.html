@@ -5,10 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Medium and Country Toggles with D3.js</title>
     <link rel="stylesheet" href="styles.css" />
+    <!-- Include D3.js via CDN -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body>
-    <!-- Country toggle buttons -->
     <div id="country-buttons-container">
       <button class="country-toggle-button" data-country="Tokyo">Tokyo</button>
       <button class="country-toggle-button" data-country="New York">
@@ -32,7 +32,6 @@
       </button>
     </div>
 
-    <!-- Medium toggle buttons -->
     <div id="buttons-container">
       <button class="toggle-button" data-medium="1">Medium 1</button>
       <button class="toggle-button" data-medium="2">Medium 2</button>
@@ -45,6 +44,8 @@
     </div>
 
     <div id="outer-container"></div>
+
+    <!-- Tooltip Element -->
     <div id="tooltip" class="tooltip"></div>
 
     <script src="script.js"></script>

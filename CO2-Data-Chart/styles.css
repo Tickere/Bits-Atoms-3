@@ -9,6 +9,7 @@ body {
   background-color: #eee;
 }
 
+#country-buttons-container,
 #buttons-container {
   display: flex;
   justify-content: center;
@@ -16,23 +17,44 @@ body {
   gap: 10px;
 }
 
-.toggle-button {
+.toggle-button,
+.country-toggle-button {
   padding: 10px 15px;
   border: 1px solid #333;
   border-radius: 5px;
   background-color: #f4f4f4;
   cursor: pointer;
   font-size: 14px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
+/* Medium buttons selected state */
 .toggle-button.toggled {
   background-color: #4caf50;
   color: #fff;
 }
 
+/* Medium buttons hover effect */
+.toggle-button:hover:not(.toggled) {
+  background-color: #4caf50;
+  color: #fff;
+}
+
+/* Country buttons selected state (blue) */
+.country-toggle-button.toggled {
+  background-color: #2196f3;
+  color: #fff;
+}
+
+/* Country buttons hover effect */
+.country-toggle-button:hover:not(.toggled) {
+  background-color: #2196f3;
+  color: #fff;
+}
+
 #outer-container {
   display: flex;
-  flex-wrap: wrap;
+  flex-direction: row;
   width: 80vw;
   height: 80vh;
   margin: 20px;
@@ -46,17 +68,11 @@ body {
 .grid-container {
   position: relative;
   flex: 1;
-  min-height: 200px; /* Ensure some height for inactive containers */
   padding: 20px;
   border: 1px solid #333;
   box-sizing: border-box;
   overflow: hidden;
   background: #fff;
-  display: none; /* Hidden by default */
-}
-
-.grid-container.active {
-  display: block; /* Show active grids */
 }
 
 .square {
@@ -65,6 +81,7 @@ body {
   position: absolute;
 }
 
+/* Tooltip styles */
 .tooltip {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.7);
@@ -75,25 +92,4 @@ body {
   font-size: 12px;
   opacity: 0;
   transition: opacity 0.2s;
-}
-
-#country-buttons-container {
-  display: flex;
-  justify-content: center;
-  margin: 10px 0;
-  gap: 10px;
-}
-
-.country-toggle-button {
-  padding: 10px 15px;
-  border: 1px solid #333;
-  border-radius: 5px;
-  background-color: #f4f4f4;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.country-toggle-button.toggled {
-  background-color: #007bff;
-  color: #fff;
 }

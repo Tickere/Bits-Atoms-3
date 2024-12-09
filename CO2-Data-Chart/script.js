@@ -1,88 +1,61 @@
-let activeMediums = []; // Keeps track of active mediums
-let selectedCountry = "Berlin"; // Default country
-const spacing = 2;
-const padding = 5;
-let squaresPerGridFull = []; // Placeholder for square counts
-
 // Initialize Tooltip using D3.js
 const tooltip = d3.select("#tooltip");
 
-// Load data from data.json
-async function loadData() {
-  const response = await fetch("data.json");
+// Placeholder for dynamically computed square data
+let squaresPerGridFull = [];
+let activeMediums = [];
+let currentCountry = "Berlin"; // Default country
+
+const spacing = 2;
+const padding = 5;
+
+// Fetch the data and initialize
+async function fetchData() {
+  const response = await fetch("data.json"); // Load the JSON file
   const data = await response.json();
 
-  console.log(data); // Debug: Log the fetched data
+  // Store the full data
+  window.fullData = data;
 
-  // Update the grid data based on the selected country
-  updateGridData(data, selectedCountry);
+  // Initialize squares based on the default country
+  updateSquaresFromCountry(currentCountry);
 
-  // Build the initial layout after loading data
+  // Build the initial layout
   buildLayout();
-
-  // Attach event listeners for country buttons
-  document.querySelectorAll(".country-toggle-button").forEach((button) => {
-    button.addEventListener("click", () => {
-      console.log(`Clicked country: ${button.dataset.country}`); // Debug
-      selectCountry(data, button.dataset.country);
-    });
-  });
 }
 
-function updateGridData(data, country) {
-  const countryData = data.find((item) => item.country === country);
+function updateSquaresFromCountry(countryName) {
+  const countryData = window.fullData.find(
+    (item) => item.country === countryName
+  );
 
-  if (!countryData) {
-    console.error(`Country data not found for: ${country}`); // Debugging
-    return;
-  }
+  if (!countryData) return;
 
   squaresPerGridFull = [
-    Math.ceil(countryData["Video conference"] / 1000),
-    Math.ceil(countryData["Streaming"] / 1000),
-    Math.ceil(countryData["E-Mail attachment"] / 1000),
-    Math.ceil(countryData["AI prompt"] / 1000),
-    Math.ceil(countryData["E-Mail"] / 1000),
-    Math.ceil(countryData["Spam"] / 1000),
-    Math.ceil(countryData["Tweet"] / 1000),
-    Math.ceil(countryData["Google search"] / 1000),
+    Math.max(1, Math.round(countryData["Video conference"] / 1000)),
+    Math.max(1, Math.round(countryData["Streaming"] / 1000)),
+    Math.max(1, Math.round(countryData["E-Mail attachment"] / 1000)),
+    Math.max(1, Math.round(countryData["AI prompt"] / 1000)),
+    Math.max(1, Math.round(countryData["E-Mail"] / 1000)),
+    Math.max(1, Math.round(countryData["Spam"] / 1000)),
+    Math.max(1, Math.round(countryData["Tweet"] / 1000)),
+    Math.max(1, Math.round(countryData["Google search"] / 1000)),
   ];
 }
 
-function selectCountry(data, country) {
-  selectedCountry = country;
-  updateGridData(data, country);
-
-  // Debugging: Log the selected country
-  console.log(`Selected country: ${country}`);
-
-  // Update toggled state for country buttons
-  document.querySelectorAll(".country-toggle-button").forEach((button) => {
-    // Match the button's `data-country` attribute to the selected country
-    button.classList.toggle("toggled", button.dataset.country === country);
-  });
-
-  // Rebuild layout to reflect new country data
-  buildLayout();
-}
-
-// Build the layout based on active mediums
 function buildLayout() {
   const outerContainer = document.getElementById("outer-container");
-  outerContainer.innerHTML = ""; // Clear existing grids
+  outerContainer.innerHTML = "";
 
   for (let i = 0; i < 8; i++) {
     const grid = document.createElement("div");
     grid.classList.add("grid-container");
-    grid.dataset.medium = i;
-
     if (activeMediums.includes(i)) {
-      grid.classList.add("active");
+      outerContainer.appendChild(grid);
     } else {
-      grid.classList.add("inactive");
+      outerContainer.appendChild(grid);
+      grid.style.display = "none";
     }
-
-    outerContainer.appendChild(grid);
   }
 
   layoutAllGrids();
@@ -115,14 +88,14 @@ function findGlobalSquareSize() {
   const containers = document.querySelectorAll(".grid-container");
   const sizes = [];
   activeMediums.forEach((mediumIndex, index) => {
-    const container = containers[index];
+    const container = containers[mediumIndex];
     const maxSize = findMaxSquareSizeForSingleGrid(
       container,
       squaresPerGridFull[mediumIndex]
     );
     sizes.push(maxSize);
   });
-  return Math.max(14, Math.min(...sizes)); // Enforce minimum size of 14
+  return Math.max(14, Math.min(...sizes));
 }
 
 function layoutSquaresForContainer(
@@ -140,7 +113,6 @@ function layoutSquaresForContainer(
   for (let cols = numSquares; cols >= 1; cols--) {
     const rows = Math.ceil(numSquares / cols);
     const totalHorizontalSpacing = (cols - 1) * spacing;
-    const totalVerticalSpacing = (rows - 1) * spacing;
 
     const requiredWidth = cols * globalSquareSize + totalHorizontalSpacing;
     if (requiredWidth <= innerWidth) {
@@ -150,12 +122,11 @@ function layoutSquaresForContainer(
   }
 
   const chosenRows = Math.ceil(numSquares / chosenColumns);
+
   const requiredHeight =
     padding * 2 + chosenRows * globalSquareSize + (chosenRows - 1) * spacing;
-
   if (requiredHeight > container.clientHeight) {
     container.style.height = requiredHeight + "px";
-    container.scrollTop = container.scrollHeight; // Scroll to the bottom
   }
 
   for (let i = 0; i < numSquares; i++) {
@@ -195,24 +166,18 @@ function layoutSquaresForContainer(
 }
 
 function layoutAllGrids() {
+  if (activeMediums.length === 0) return;
+
+  const globalSquareSize = findGlobalSquareSize();
   const containers = document.querySelectorAll(".grid-container");
-
-  containers.forEach((container) => {
-    const mediumIndex = parseInt(container.dataset.medium, 10);
-
-    if (activeMediums.includes(mediumIndex)) {
-      const numSquares = squaresPerGridFull[mediumIndex];
-      const globalSquareSize = findGlobalSquareSize();
-      layoutSquaresForContainer(
-        container,
-        numSquares,
-        globalSquareSize,
-        mediumIndex
-      );
-      container.style.display = "block";
-    } else {
-      container.style.display = "none";
-    }
+  activeMediums.forEach((mediumIndex) => {
+    const container = containers[mediumIndex];
+    layoutSquaresForContainer(
+      container,
+      squaresPerGridFull[mediumIndex],
+      globalSquareSize,
+      mediumIndex
+    );
   });
 }
 
@@ -226,9 +191,25 @@ function toggleMedium(mediumIndex) {
     button.classList.remove("toggled");
   } else {
     activeMediums.push(mediumIndex);
+    activeMediums.sort((a, b) => a - b);
     button.classList.add("toggled");
   }
 
+  buildLayout();
+}
+
+function toggleCountry(countryName) {
+  const buttons = document.querySelectorAll(".country-toggle-button");
+  buttons.forEach((button) => {
+    if (button.dataset.country === countryName) {
+      button.classList.add("toggled");
+    } else {
+      button.classList.remove("toggled");
+    }
+  });
+
+  currentCountry = countryName;
+  updateSquaresFromCountry(currentCountry);
   buildLayout();
 }
 
@@ -236,5 +217,10 @@ document.querySelectorAll(".toggle-button").forEach((button, index) => {
   button.addEventListener("click", () => toggleMedium(index));
 });
 
-loadData();
+document.querySelectorAll(".country-toggle-button").forEach((button) => {
+  button.addEventListener("click", () => toggleCountry(button.dataset.country));
+});
+
+fetchData();
+
 window.addEventListener("resize", layoutAllGrids);
