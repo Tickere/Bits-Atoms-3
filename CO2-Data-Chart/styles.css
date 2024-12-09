@@ -76,3 +76,24 @@ body {
   opacity: 0;
   transition: opacity 0.2s;
 }
+
+#country-buttons-container {
+  display: flex;
+  justify-content: center;
+  margin: 10px 0;
+  gap: 10px;
+}
+
+.country-toggle-button {
+  padding: 10px 15px;
+  border: 1px solid #333;
+  border-radius: 5px;
+  background-color: #f4f4f4;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.country-toggle-button.toggled {
+  background-color: #007bff;
+  color: #fff;
+}

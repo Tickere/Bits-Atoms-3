@@ -3,26 +3,48 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Country Toggles with D3.js</title>
+    <title>Medium and Country Toggles with D3.js</title>
     <link rel="stylesheet" href="styles.css" />
-    <!-- Include D3.js via CDN -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body>
+    <!-- Country toggle buttons -->
+    <div id="country-buttons-container">
+      <button class="country-toggle-button" data-country="Tokyo">Tokyo</button>
+      <button class="country-toggle-button" data-country="New York">
+        New York
+      </button>
+      <button class="country-toggle-button" data-country="Berlin">
+        Berlin
+      </button>
+      <button class="country-toggle-button" data-country="Istanbul">
+        Istanbul
+      </button>
+      <button class="country-toggle-button" data-country="Barcelona">
+        Barcelona
+      </button>
+      <button class="country-toggle-button" data-country="Dubai">Dubai</button>
+      <button class="country-toggle-button" data-country="Singapore">
+        Singapore
+      </button>
+      <button class="country-toggle-button" data-country="Beijing">
+        Beijing
+      </button>
+    </div>
+
+    <!-- Medium toggle buttons -->
     <div id="buttons-container">
-      <button class="toggle-button" data-country="1">Country 1</button>
-      <button class="toggle-button" data-country="2">Country 2</button>
-      <button class="toggle-button" data-country="3">Country 3</button>
-      <button class="toggle-button" data-country="4">Country 4</button>
-      <button class="toggle-button" data-country="5">Country 5</button>
-      <button class="toggle-button" data-country="6">Country 6</button>
-      <button class="toggle-button" data-country="7">Country 7</button>
-      <button class="toggle-button" data-country="8">Country 8</button>
+      <button class="toggle-button" data-medium="1">Medium 1</button>
+      <button class="toggle-button" data-medium="2">Medium 2</button>
+      <button class="toggle-button" data-medium="3">Medium 3</button>
+      <button class="toggle-button" data-medium="4">Medium 4</button>
+      <button class="toggle-button" data-medium="5">Medium 5</button>
+      <button class="toggle-button" data-medium="6">Medium 6</button>
+      <button class="toggle-button" data-medium="7">Medium 7</button>
+      <button class="toggle-button" data-medium="8">Medium 8</button>
     </div>
 
     <div id="outer-container"></div>
-
-    <!-- Tooltip Element -->
     <div id="tooltip" class="tooltip"></div>
 
     <script src="script.js"></script>

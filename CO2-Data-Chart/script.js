@@ -1,29 +1,85 @@
-// Define the square data for up to 8 grids
-const squaresPerGridFull = [1, 600, 10, 60, 25, 40, 15, 5];
-
-let activeCountries = []; // Keeps track of active grids
-
+let activeMediums = []; // Keeps track of active mediums
+let selectedCountry = "Berlin"; // Default country
 const spacing = 2;
-const padding = 5; // Matches .grid-container padding in CSS
+const padding = 5;
+let squaresPerGridFull = []; // Placeholder for square counts
 
 // Initialize Tooltip using D3.js
 const tooltip = d3.select("#tooltip");
 
-// Build the layout based on active countries
+// Load data from data.json
+async function loadData() {
+  const response = await fetch("data.json");
+  const data = await response.json();
+
+  console.log(data); // Debug: Log the fetched data
+
+  // Update the grid data based on the selected country
+  updateGridData(data, selectedCountry);
+
+  // Build the initial layout after loading data
+  buildLayout();
+
+  // Attach event listeners for country buttons
+  document.querySelectorAll(".country-toggle-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      console.log(`Clicked country: ${button.dataset.country}`); // Debug
+      selectCountry(data, button.dataset.country);
+    });
+  });
+}
+
+function updateGridData(data, country) {
+  const countryData = data.find((item) => item.country === country);
+
+  if (!countryData) {
+    console.error(`Country data not found for: ${country}`); // Debugging
+    return;
+  }
+
+  squaresPerGridFull = [
+    Math.ceil(countryData["Video conference"] / 1000),
+    Math.ceil(countryData["Streaming"] / 1000),
+    Math.ceil(countryData["E-Mail attachment"] / 1000),
+    Math.ceil(countryData["AI prompt"] / 1000),
+    Math.ceil(countryData["E-Mail"] / 1000),
+    Math.ceil(countryData["Spam"] / 1000),
+    Math.ceil(countryData["Tweet"] / 1000),
+    Math.ceil(countryData["Google search"] / 1000),
+  ];
+}
+
+function selectCountry(data, country) {
+  selectedCountry = country;
+  updateGridData(data, country);
+
+  // Debugging: Log the selected country
+  console.log(`Selected country: ${country}`);
+
+  // Update toggled state for country buttons
+  document.querySelectorAll(".country-toggle-button").forEach((button) => {
+    // Match the button's `data-country` attribute to the selected country
+    button.classList.toggle("toggled", button.dataset.country === country);
+  });
+
+  // Rebuild layout to reflect new country data
+  buildLayout();
+}
+
+// Build the layout based on active mediums
 function buildLayout() {
   const outerContainer = document.getElementById("outer-container");
   outerContainer.innerHTML = ""; // Clear existing grids
 
-  // Always create 8 grid containers, one for each possible country
   for (let i = 0; i < 8; i++) {
     const grid = document.createElement("div");
     grid.classList.add("grid-container");
-    grid.dataset.country = i; // Assign a data attribute to identify the country
+    grid.dataset.medium = i;
 
-    if (activeCountries.includes(i)) {
-      grid.classList.add("active"); // Mark as active if it's toggled
+    if (activeMediums.includes(i)) {
+      grid.classList.add("active");
     } else {
-      grid.classList.add("inactive"); // Mark as inactive otherwise
+      grid.classList.add("inactive");
     }
 
     outerContainer.appendChild(grid);
@@ -58,11 +114,11 @@ function findMaxSquareSizeForSingleGrid(container, numSquares) {
 function findGlobalSquareSize() {
   const containers = document.querySelectorAll(".grid-container");
   const sizes = [];
-  activeCountries.forEach((countryIndex, index) => {
+  activeMediums.forEach((mediumIndex, index) => {
     const container = containers[index];
     const maxSize = findMaxSquareSizeForSingleGrid(
       container,
-      squaresPerGridFull[countryIndex]
+      squaresPerGridFull[mediumIndex]
     );
     sizes.push(maxSize);
   });
@@ -73,7 +129,7 @@ function layoutSquaresForContainer(
   container,
   numSquares,
   globalSquareSize,
-  countryIndex
+  mediumIndex
 ) {
   container.innerHTML = "";
 
@@ -111,8 +167,8 @@ function layoutSquaresForContainer(
     const col = i % chosenColumns;
     const row = Math.floor(i / chosenColumns);
 
-    const leftPos = padding + col * (globalSquareSize + spacing); // Columns are left-aligned
-    const topPos = padding + row * (globalSquareSize + spacing); // Rows are top-aligned
+    const leftPos = padding + col * (globalSquareSize + spacing);
+    const topPos = padding + row * (globalSquareSize + spacing);
 
     square.style.left = leftPos + "px";
     square.style.top = topPos + "px";
@@ -121,7 +177,7 @@ function layoutSquaresForContainer(
       .on("mouseover", function (event) {
         tooltip
           .style("opacity", 1)
-          .html(`Country ${countryIndex + 1} - Square ${i + 1}`)
+          .html(`Medium ${mediumIndex + 1} - Square ${i + 1}`)
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 28 + "px");
       })
@@ -142,34 +198,34 @@ function layoutAllGrids() {
   const containers = document.querySelectorAll(".grid-container");
 
   containers.forEach((container) => {
-    const countryIndex = parseInt(container.dataset.country, 10);
+    const mediumIndex = parseInt(container.dataset.medium, 10);
 
-    if (activeCountries.includes(countryIndex)) {
-      const numSquares = squaresPerGridFull[countryIndex];
+    if (activeMediums.includes(mediumIndex)) {
+      const numSquares = squaresPerGridFull[mediumIndex];
       const globalSquareSize = findGlobalSquareSize();
       layoutSquaresForContainer(
         container,
         numSquares,
         globalSquareSize,
-        countryIndex
+        mediumIndex
       );
-      container.style.display = "block"; // Ensure active grids are visible
+      container.style.display = "block";
     } else {
-      container.style.display = "none"; // Hide inactive grids
+      container.style.display = "none";
     }
   });
 }
 
-function toggleCountry(countryIndex) {
+function toggleMedium(mediumIndex) {
   const button = document.querySelector(
-    `.toggle-button[data-country="${countryIndex + 1}"]`
+    `.toggle-button[data-medium="${mediumIndex + 1}"]`
   );
 
-  if (activeCountries.includes(countryIndex)) {
-    activeCountries = activeCountries.filter((index) => index !== countryIndex);
+  if (activeMediums.includes(mediumIndex)) {
+    activeMediums = activeMediums.filter((index) => index !== mediumIndex);
     button.classList.remove("toggled");
   } else {
-    activeCountries.push(countryIndex);
+    activeMediums.push(mediumIndex);
     button.classList.add("toggled");
   }
 
@@ -177,8 +233,8 @@ function toggleCountry(countryIndex) {
 }
 
 document.querySelectorAll(".toggle-button").forEach((button, index) => {
-  button.addEventListener("click", () => toggleCountry(index));
+  button.addEventListener("click", () => toggleMedium(index));
 });
 
-buildLayout();
+loadData();
 window.addEventListener("resize", layoutAllGrids);
