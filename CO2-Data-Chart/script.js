@@ -1,6 +1,18 @@
 // Initialize Tooltip using D3.js
 const tooltip = d3.select("#tooltip");
 
+// Medium names corresponding to their index
+const mediumNames = [
+  "Video Conference",
+  "Streaming",
+  "E-Mail Attachment",
+  "AI Prompt",
+  "E-Mail",
+  "Spam",
+  "Tweet",
+  "Google Search",
+];
+
 // Placeholder for dynamically computed square data
 let squaresPerGridFull = [];
 let activeMediums = [];
@@ -19,6 +31,7 @@ async function fetchData() {
 
   // Initialize squares based on the default country
   updateSquaresFromCountry(currentCountry);
+  updateCountryData(currentCountry); // Initialize the country data display
 
   // Build the initial layout
   buildLayout();
@@ -41,6 +54,51 @@ function updateSquaresFromCountry(countryName) {
     Math.max(1, Math.round(countryData["Tweet"] / 1000)),
     Math.max(1, Math.round(countryData["Google search"] / 1000)),
   ];
+}
+
+function updateCountryData(countryName) {
+  const countryDataContainer = document.getElementById(
+    "country-data-container"
+  );
+  const countryData = window.fullData.find(
+    (item) => item.country === countryName
+  );
+
+  if (!countryData) {
+    countryDataContainer.innerHTML = ""; // Clear the container if no data is found
+    return;
+  }
+
+  // First column: "country", "Flight duration", "Distance"
+  const column1 = `
+    <div><strong>Country:</strong> ${countryData.country}</div>
+    <div><strong>Flight duration:</strong> ${countryData["Flight duration"]}</div>
+    <div><strong>Distance:</strong> ${countryData.Distance}</div>
+  `;
+
+  // Second column: "gCO₂ per passenger", "Google search", "Tweet", "Spam", "E-Mail"
+  const column2 = `
+    <div><strong>gCO₂ per passenger:</strong> ${countryData["gCO₂ per passenger"]}</div>
+    <div><strong>Google search:</strong> ${countryData["Google search"]}</div>
+    <div><strong>Tweet:</strong> ${countryData.Tweet}</div>
+    <div><strong>Spam:</strong> ${countryData.Spam}</div>
+    <div><strong>E-Mail:</strong> ${countryData["E-Mail"]}</div>
+  `;
+
+  // Third column: "AI prompt", "E-Mail attachment", "Streaming", "Video conference"
+  const column3 = `
+    <div><strong>AI prompt:</strong> ${countryData["AI prompt"]}</div>
+    <div><strong>E-Mail attachment:</strong> ${countryData["E-Mail attachment"]}</div>
+    <div><strong>Streaming:</strong> ${countryData.Streaming}</div>
+    <div><strong>Video conference:</strong> ${countryData["Video conference"]}</div>
+  `;
+
+  // Create the three columns and set their content
+  countryDataContainer.innerHTML = `
+    <div class="column">${column1}</div>
+    <div class="column">${column2}</div>
+    <div class="column">${column3}</div>
+  `;
 }
 
 function buildLayout() {
@@ -148,7 +206,9 @@ function layoutSquaresForContainer(
       .on("mouseover", function (event) {
         tooltip
           .style("opacity", 1)
-          .html(`Medium ${mediumIndex + 1} - Square ${i + 1}`)
+          .html(
+            `${mediumNames[mediumIndex]} - ${((i + 1) * 1000).toLocaleString()}`
+          ) // Updated tooltip to display square number x 1000
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 28 + "px");
       })
@@ -210,6 +270,7 @@ function toggleCountry(countryName) {
 
   currentCountry = countryName;
   updateSquaresFromCountry(currentCountry);
+  updateCountryData(currentCountry); // Update the country data
   buildLayout();
 }
 

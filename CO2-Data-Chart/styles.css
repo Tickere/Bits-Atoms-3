@@ -67,42 +67,43 @@ body {
 /* Button styles */
 .toggle-button,
 .country-toggle-button {
-  padding: 5px; /* Updated padding */
+  padding: 5px;
   border: none;
-  background-color: #67bde2; /* Updated inactive color */
+  background-color: #67bde2;
   cursor: pointer;
-  font-size: 16px; /* Updated font size */
+  font-size: 16px;
   transition: background-color 0.3s ease, color 0.3s ease;
-  height: 28px; /* Updated height */
-  line-height: 18px; /* Adjust line-height for better text alignment */
-  border-radius: 0px; /* Remove rounded edges */
-  color: #101010; /* Text color for all states */
+  height: 28px;
+  line-height: 18px;
+  border-radius: 0px;
+  color: #101010;
 }
 
 /* Button hover effect */
 .toggle-button:hover:not(.toggled),
 .country-toggle-button:hover:not(.toggled) {
-  background-color: #5ba8c9; /* Updated hover color */
+  background-color: #5093b0; /* Updated hover color */
 }
 
 /* Button active state */
 .toggle-button.toggled,
 .country-toggle-button.toggled {
-  background-color: #5ba8c9; /* Updated active color */
-  color: #101010; /* Ensure active text color remains the same */
+  background-color: #5093b0; /* Updated active color */
+  color: #101010;
 }
 
 /* Outer container for grid content */
 #outer-container {
   display: flex;
   flex-direction: row;
-  width: 100%; /* Full width */
-  height: 531px; /* Fixed height */
+  width: 100%;
+  height: 531px;
   margin: 20px auto;
   background: #67bde2; /* Updated outer container color */
-  box-sizing: border-box;
+  box-sizing: border-box; /* Ensures padding is included in width and height */
   overflow-y: auto; /* Enable vertical scrolling */
-  gap: 18px; /* Space between columns */
+  gap: 18px;
+  padding: 12px; /* Inner padding of 12px */
 }
 
 /* Grid container styles */
@@ -132,4 +133,38 @@ body {
   font-size: 12px;
   opacity: 0;
   transition: opacity 0.2s;
+}
+
+/* Country data container styles */
+#country-data-container {
+  margin-top: 24px; /* 24px spacing from the outer container */
+  display: flex; /* Use flexbox for columns */
+  gap: 20px; /* Spacing between columns */
+  font-size: 16px; /* Font size for readability */
+  color: #101010; /* Text color */
+}
+
+#country-data-container .column {
+  flex: 1; /* Equal column widths */
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  gap: 10px; /* Spacing between rows in a column */
+}
+
+body {
+  font-family: "B612", sans-serif;
+}
+
+@font-face {
+  font-family: "B612";
+  src: url("fonts/B612-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "B612";
+  src: url("fonts/B612-Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
 }
