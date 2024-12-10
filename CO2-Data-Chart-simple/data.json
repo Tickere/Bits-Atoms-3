@@ -1,5 +1,29 @@
 [
   {
+    "emission": "1kg CO₂",
+
+    "Google search descriptor": "Google 5000 things",
+    "Google search": 5000,
+
+    "Spam descriptor": "Receive 3333 spam messages",
+    "Spam": 3333,
+
+    "E-Mail descriptor": "Send 250 E-Mails",
+    "E-Mail": 250,
+
+    "AI prompt descriptor": "Ask the AI 233 Questions",
+    "AI prompt": 233,
+
+    "E-Mail with photo descriptor": "Send 20 E-Mails with photos",
+    "E-Mail with photo": 20,
+
+    "Streaming descriptor": "Stream 10 Hours of netflix",
+    "Streaming": 10,
+
+    "Video conference descriptor": "Host a 7 hour long videoconference",
+    "Video conference": 7
+  },
+  {
     "country": "Tokyo",
 
     "Flight duration": "12h 26m",
