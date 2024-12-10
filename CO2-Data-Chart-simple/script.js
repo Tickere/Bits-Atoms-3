@@ -1,109 +1,67 @@
-// Initialize Tooltip using D3.js
+// Initialize the tooltip element using D3.js
 const tooltip = d3.select("#tooltip");
 
-// Medium names corresponding to their index
-const mediumNames = [
-  "Video Conference",
-  "Streaming",
-  "E-Mail Attachment",
-  "AI Prompt",
-  "E-Mail",
-  "Spam",
-  "Tweet",
-  "Google Search",
-];
+// Arrays to store data for grids and mediums
+let squaresPerGridFull = []; // Number of squares per grid for each medium
+let activeMediums = []; // Indices of mediums currently toggled on
+let mediumNames = []; // Names of all mediums extracted from JSON
 
-// Placeholder for dynamically computed square data
-let squaresPerGridFull = [];
-let activeMediums = []; // Start with no active mediums
-let currentCountry = "Berlin"; // Default country
+// Layout spacing constants
+const spacing = 2; // Space between squares
+const padding = 5; // Padding within containers
 
-const spacing = 2;
-const padding = 5;
-
-// Fetch the data and initialize
+// Fetch data from the JSON file and initialize the infographic
 async function fetchData() {
   try {
-    const response = await fetch("data.json");
+    const response = await fetch("data.json"); // Load the data file
     const data = await response.json();
-    window.fullData = data;
 
-    updateSquaresFromCountry(currentCountry);
-    updateCountryData(currentCountry);
+    // Extract medium names and corresponding values from JSON
+    const jsonData = data[0]; // Assumes the first object contains relevant data
+    mediumNames = Object.keys(jsonData).filter(
+      (key) => key !== "emission" && !key.includes("descriptor")
+    );
+    squaresPerGridFull = mediumNames.map((name) => jsonData[name]);
+
+    // Generate buttons and initialize layout
+    createButtons();
     buildLayout();
   } catch (error) {
     console.error("Failed to fetch or parse data.json:", error);
   }
 }
 
-function updateSquaresFromCountry(countryName) {
-  const countryData = window.fullData.find(
-    (item) => item.country === countryName
-  );
-  if (!countryData) return;
+// Create buttons dynamically for each medium
+function createButtons() {
+  const buttonsContainer = document.getElementById("buttons-container");
+  buttonsContainer.innerHTML = ""; // Clear any existing buttons
 
-  squaresPerGridFull = [
-    Math.round(countryData["Video conference"] / 1000),
-    Math.round(countryData["Streaming"] / 1000),
-    Math.round(countryData["E-Mail attachment"] / 1000),
-    Math.round(countryData["AI prompt"] / 1000),
-    Math.round(countryData["E-Mail"] / 1000),
-    Math.round(countryData["Spam"] / 1000),
-    Math.round(countryData["Tweet"] / 1000),
-    Math.round(countryData["Google search"] / 1000),
-  ];
+  mediumNames.forEach((name, index) => {
+    const button = document.createElement("button");
+    button.className = "toggle-button"; // Assign button class
+    button.dataset.medium = index + 1; // Set a data attribute for reference
+    button.textContent = name; // Display medium name
+    button.addEventListener("click", () => toggleMedium(index)); // Add toggle functionality
+    buttonsContainer.appendChild(button); // Append button to container
+  });
 }
 
-function updateCountryData(countryName) {
-  const countryDataContainer = document.getElementById(
-    "country-data-container"
-  );
-  const countryData = window.fullData.find(
-    (item) => item.country === countryName
-  );
-  if (!countryData) {
-    countryDataContainer.innerHTML = "No data available for this country.";
-    return;
-  }
-
-  const countryDetailsHTML = `
-    <div class="column">
-      <div><strong>Country:</strong> ${countryData.country}</div>
-      <div><strong>Flight duration:</strong> ${countryData["Flight duration"]}</div>
-      <div><strong>Distance:</strong> ${countryData.Distance}</div>
-    </div>
-    <div class="column">
-      <div><strong>gCO₂ per passenger:</strong> ${countryData["gCO₂ per passenger"]}</div>
-      <div><strong>Google search:</strong> ${countryData["Google search"]}</div>
-      <div><strong>Tweet:</strong> ${countryData.Tweet}</div>
-      <div><strong>Spam:</strong> ${countryData.Spam}</div>
-      <div><strong>E-Mail:</strong> ${countryData["E-Mail"]}</div>
-    </div>
-    <div class="column">
-      <div><strong>AI prompt:</strong> ${countryData["AI prompt"]}</div>
-      <div><strong>E-Mail attachment:</strong> ${countryData["E-Mail attachment"]}</div>
-      <div><strong>Streaming:</strong> ${countryData.Streaming}</div>
-      <div><strong>Video conference:</strong> ${countryData["Video conference"]}</div>
-    </div>
-  `;
-
-  countryDataContainer.innerHTML = countryDetailsHTML;
-}
-
+// Build the layout for the infographic grids
 function buildLayout() {
   const outerContainer = document.getElementById("outer-container");
-  outerContainer.innerHTML = "";
+  outerContainer.innerHTML = ""; // Clear existing grids
 
-  for (let i = 0; i < squaresPerGridFull.length; i++) {
+  mediumNames.forEach((_, i) => {
     const grid = document.createElement("div");
-    grid.classList.add("grid-container");
+    grid.classList.add("grid-container"); // Assign grid class
     outerContainer.appendChild(grid);
-    grid.style.display = activeMediums.includes(i) ? "flex" : "none";
-  }
+    grid.style.display = activeMediums.includes(i) ? "flex" : "none"; // Show only active grids
+  });
 
-  layoutAllGrids();
+  layoutAllGrids(); // Apply layout to all grids
 }
 
+// Calculate the maximum square size for a single grid
 function findMaxSquareSizeForSingleGrid(container, numSquares) {
   const totalWidth = container.clientWidth;
   const totalHeight = container.clientHeight;
@@ -125,10 +83,11 @@ function findMaxSquareSizeForSingleGrid(container, numSquares) {
   return bestSquareSize;
 }
 
+// Determine the global square size that fits all active grids
 function findGlobalSquareSize() {
   const containers = document.querySelectorAll(".grid-container");
   const sizes = [];
-  for (let i = 0; i < squaresPerGridFull.length; i++) {
+  mediumNames.forEach((_, i) => {
     if (activeMediums.includes(i)) {
       const container = containers[i];
       const maxSize = findMaxSquareSizeForSingleGrid(
@@ -137,26 +96,27 @@ function findGlobalSquareSize() {
       );
       sizes.push(maxSize);
     }
-  }
-  return Math.max(14, Math.min(...sizes));
+  });
+  return Math.max(14, Math.min(...sizes)); // Ensure a minimum size of 14px
 }
 
+// Layout squares within a container grid
 function layoutSquaresForContainer(
   container,
   numSquares,
   globalSquareSize,
   mediumIndex
 ) {
-  container.innerHTML = "";
+  container.innerHTML = ""; // Clear existing squares
 
   const totalWidth = container.clientWidth;
   const innerWidth = totalWidth - 2 * padding;
 
-  let chosenColumns = 1;
+  // Determine the number of columns based on square size
+  let chosenColumns = Math.min(7, numSquares); // Maximum 7 columns
   for (let cols = numSquares; cols >= 1; cols--) {
     const rows = Math.ceil(numSquares / cols);
     const totalHorizontalSpacing = (cols - 1) * spacing;
-
     const requiredWidth = cols * globalSquareSize + totalHorizontalSpacing;
     if (requiredWidth <= innerWidth) {
       chosenColumns = cols;
@@ -166,9 +126,10 @@ function layoutSquaresForContainer(
 
   const chosenRows = Math.ceil(numSquares / chosenColumns);
   const requiredHeight =
-    padding * 2 + chosenRows * globalSquareSize + (chosenRows - 1) * spacing;
+    padding + chosenRows * globalSquareSize + (chosenRows - 1) * spacing;
   container.style.height = requiredHeight + "px";
 
+  // Create and position squares
   for (let i = 0; i < numSquares; i++) {
     const square = document.createElement("div");
     square.classList.add("square");
@@ -184,13 +145,12 @@ function layoutSquaresForContainer(
     square.style.left = leftPos + "px";
     square.style.top = topPos + "px";
 
+    // Add interactivity with tooltips
     d3.select(square)
       .on("mouseover", function (event) {
         tooltip
           .style("opacity", 1)
-          .html(
-            `${mediumNames[mediumIndex]} - ${((i + 1) * 1000).toLocaleString()}`
-          )
+          .html(`${mediumNames[mediumIndex]} - ${(i + 1).toLocaleString()}`)
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 28 + "px");
       })
@@ -207,6 +167,7 @@ function layoutSquaresForContainer(
   }
 }
 
+// Layout all active grids
 function layoutAllGrids() {
   const globalSquareSize = findGlobalSquareSize();
   const containers = document.querySelectorAll(".grid-container");
@@ -221,27 +182,26 @@ function layoutAllGrids() {
   });
 }
 
+// Toggle the visibility of a medium's grid
 function toggleMedium(mediumIndex) {
   const button = document.querySelector(
     `.toggle-button[data-medium="${mediumIndex + 1}"]`
   );
 
   if (activeMediums.includes(mediumIndex)) {
+    // Remove from active mediums
     const index = activeMediums.indexOf(mediumIndex);
     activeMediums.splice(index, 1);
     button.classList.remove("toggled");
   } else {
+    // Add to active mediums
     activeMediums.push(mediumIndex);
     button.classList.add("toggled");
   }
 
-  buildLayout();
+  buildLayout(); // Rebuild the layout
 }
 
-document.querySelectorAll(".toggle-button").forEach((button, index) => {
-  button.addEventListener("click", () => toggleMedium(index));
-});
-
+// Fetch data and set up event listener for window resizing
 fetchData();
-
 window.addEventListener("resize", layoutAllGrids);
