@@ -6,7 +6,7 @@ body {
   height: 100%;
   box-sizing: border-box;
   font-family: sans-serif;
-  background-color: #eee;
+  background-color: #72d2fb; /* Updated background color */
 }
 
 /* Main content container */
@@ -67,37 +67,29 @@ body {
 /* Button styles */
 .toggle-button,
 .country-toggle-button {
-  padding: 10px 15px;
-  border: none; /* Removed button borders */
-  border-radius: 5px;
-  background-color: #f4f4f4;
+  padding: 5px; /* Updated padding */
+  border: none;
+  background-color: #67bde2; /* Updated inactive color */
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px; /* Updated font size */
   transition: background-color 0.3s ease, color 0.3s ease;
+  height: 28px; /* Updated height */
+  line-height: 18px; /* Adjust line-height for better text alignment */
+  border-radius: 0px; /* Remove rounded edges */
+  color: #101010; /* Text color for all states */
 }
 
-/* Medium buttons selected state */
-.toggle-button.toggled {
-  background-color: #4caf50;
-  color: #fff;
-}
-
-/* Medium buttons hover effect */
-.toggle-button:hover:not(.toggled) {
-  background-color: #4caf50;
-  color: #fff;
-}
-
-/* Country buttons selected state */
-.country-toggle-button.toggled {
-  background-color: #72d2fb;
-  color: #fff;
-}
-
-/* Country buttons hover effect */
+/* Button hover effect */
+.toggle-button:hover:not(.toggled),
 .country-toggle-button:hover:not(.toggled) {
-  background-color: #72d2fb;
-  color: #fff;
+  background-color: #5ba8c9; /* Updated hover color */
+}
+
+/* Button active state */
+.toggle-button.toggled,
+.country-toggle-button.toggled {
+  background-color: #5ba8c9; /* Updated active color */
+  color: #101010; /* Ensure active text color remains the same */
 }
 
 /* Outer container for grid content */
@@ -107,7 +99,7 @@ body {
   width: 100%; /* Full width */
   height: 531px; /* Fixed height */
   margin: 20px auto;
-  background: #fff;
+  background: #67bde2; /* Updated outer container color */
   box-sizing: border-box;
   overflow-y: auto; /* Enable vertical scrolling */
   gap: 18px; /* Space between columns */
@@ -119,12 +111,12 @@ body {
   flex: 1;
   box-sizing: border-box;
   overflow: hidden;
-  background: #fff;
+  background: #67bde2; /* Updated grid container color */
 }
 
 /* Square styles */
 .square {
-  background-color: #4caf50;
+  background-color: #101010; /* Updated square color */
   box-sizing: border-box;
   position: absolute;
 }

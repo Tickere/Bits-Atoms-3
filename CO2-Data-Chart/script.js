@@ -87,7 +87,7 @@ function findMaxSquareSizeForSingleGrid(container, numSquares) {
 function findGlobalSquareSize() {
   const containers = document.querySelectorAll(".grid-container");
   const sizes = [];
-  activeMediums.forEach((mediumIndex, index) => {
+  activeMediums.forEach((mediumIndex) => {
     const container = containers[mediumIndex];
     const maxSize = findMaxSquareSizeForSingleGrid(
       container,
