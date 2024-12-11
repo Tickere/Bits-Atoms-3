@@ -5,6 +5,7 @@ const tooltip = d3.select("#tooltip");
 let squaresPerGridFull = []; // Number of squares per grid for each medium
 let activeMediums = []; // Indices of mediums currently toggled on
 let mediumNames = []; // Names of all mediums extracted from JSON
+let mediumDescriptors = []; // Descriptors for each medium
 
 // Layout spacing constants
 const spacing = 2; // Space between squares
@@ -16,10 +17,13 @@ async function fetchData() {
     const response = await fetch("data.json"); // Load the data file
     const data = await response.json();
 
-    // Extract medium names and corresponding values from JSON
+    // Extract medium names, descriptors, and corresponding values from JSON
     const jsonData = data[0]; // Assumes the first object contains relevant data
     mediumNames = Object.keys(jsonData).filter(
       (key) => key !== "emission" && !key.includes("descriptor")
+    );
+    mediumDescriptors = mediumNames.map(
+      (name) => jsonData[`${name} descriptor`]
     );
     squaresPerGridFull = mediumNames.map((name) => jsonData[name]);
 
@@ -150,7 +154,9 @@ function layoutSquaresForContainer(
       .on("mouseover", function (event) {
         tooltip
           .style("opacity", 1)
-          .html(`${mediumNames[mediumIndex]} - ${(i + 1).toLocaleString()}`)
+          .html(
+            `${mediumDescriptors[mediumIndex]}<br>${(i + 1).toLocaleString()}`
+          )
           .style("left", event.pageX + 10 + "px")
           .style("top", event.pageY - 28 + "px");
       })
